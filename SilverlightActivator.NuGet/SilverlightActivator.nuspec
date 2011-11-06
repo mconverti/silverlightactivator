@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>SilverlightActivator</id>
+    <version>1.0.0</version>
+    <title>Silverlight Activator for Windows Phone</title>
+    <authors>Mariano Converti, Damian Martinez, and Nico Bello</authors>
+    <owners>Mariano Converti, Damian Martinez, and Nico Bello</owners>
+    <projectUrl>https://github.com/mconverti/silverlightactivator</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A NuGet package that allows other packages to execute some startup code in Silverlight for Windows Phone applications</description>
+    <language>en-US</language>
+    <tags>windowsphone</tags>
+  </metadata>
+</package>
