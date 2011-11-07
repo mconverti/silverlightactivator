@@ -4,6 +4,10 @@
   xmlns:silverlightactivator="clr-namespace:SilverlightActivator;assembly=SilverlightActivator">
 
   <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
     <silverlightactivator:ActivationManager x:Name="SilverlightActivator" />
   </Application.Resources>
 
