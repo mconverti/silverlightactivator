@@ -33,25 +33,36 @@ namespace SilverlightActivator
             }
         }
 
-        private static void Init()
-        {
-            Application.Current.Startup += OnStartup;
-            Application.Current.Exit += OnApplicationExit;
-        }
-
-        private static void OnStartup(object sender, StartupEventArgs e)
+        /// <summary>
+        /// Runs all the available ApplicationStartup methods.
+        /// </summary>
+        public static void RunApplicationStartupMethods()
         {
             RunActivationMethods<ApplicationStartupMethodAttribute>();
         }
 
-        private static void OnApplicationExit(object sender, EventArgs e)
+        /// <summary>
+        /// Runs all the available ApplicationExit methods.
+        /// </summary>
+        public static void RunApplicationExitMethods()
         {
             RunActivationMethods<ApplicationExitMethodAttribute>();
         }
 
+        private static void Init()
+        {
+            Application.Current.Startup += (s, e) => RunApplicationStartupMethods();
+            Application.Current.Exit += (s, e) => RunApplicationExitMethods();
+        }
+
         private static void RunActivationMethods<T>() where T : BaseActivationMethodAttribute
         {
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            var deploymentParts = Deployment.Current.Parts.Cast<AssemblyPart>();
+            var activationAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => deploymentParts.Any(p => p.Source.Equals(a.ManifestModule.Name, StringComparison.OrdinalIgnoreCase))
+                            && (a != typeof(ActivationManager).Assembly));
+
+            foreach (var assembly in activationAssemblies)
             {
                 // The activation methods are executed according to the specified order
                 var activationAttributes = assembly.GetActivationAttributes<T>().OrderBy(at => at.Order);
