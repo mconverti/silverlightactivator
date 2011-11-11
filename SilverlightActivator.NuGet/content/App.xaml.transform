@@ -7,8 +7,8 @@
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
       </ResourceDictionary.MergedDictionaries>
+      <silverlightactivator:ActivationManager x:Name="SilverlightActivator" />
     </ResourceDictionary>
-    <silverlightactivator:ActivationManager x:Name="SilverlightActivator" />
   </Application.Resources>
 
 </Application>
