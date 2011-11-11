@@ -4,8 +4,8 @@
     <id>SilverlightActivator</id>
     <version>1.0.3</version>
     <title>Silverlight Activator for Windows Phone</title>
-    <authors>Mariano Converti, Damian Martinez, and Nicolás Bello Camilletti</authors>
-    <owners>Mariano Converti, Damian Martinez, and Nicolás Bello Camilletti</owners>
+    <authors>Mariano Converti, Damian Martinez Gelabert, and Nicolás Bello Camilletti</authors>
+    <owners>Mariano Converti, Damian Martinez Gelabert, and Nicolás Bello Camilletti</owners>
     <projectUrl>https://github.com/mconverti/silverlightactivator</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A NuGet package that allows other packages to execute some startup code in Silverlight for Windows Phone applications</description>
