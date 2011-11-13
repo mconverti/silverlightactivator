@@ -11,7 +11,10 @@
 namespace SilverlightActivator
 {
     using System;
+    using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Windows;
 
     /// <summary>
@@ -20,6 +23,8 @@ namespace SilverlightActivator
     public class ActivationManager
     {
         private static bool initialized = false;
+        private static bool loadAssemblyParts = false;
+        private static bool assemblyPartsLoaded = false;
 
         /// <summary>
         /// Initializes a new instance of the SilverlightActivator.ActivationManager class, containing the activation mechanisms.
@@ -31,6 +36,17 @@ namespace SilverlightActivator
                 Init();
                 initialized = true;
             }
+        }
+
+        /// <summary>
+        /// Gets or Sets a flag indicating if all the assembly parts in the 
+        /// Application Manifest should be loaded at startup to look for 
+        /// activation attributes.
+        /// </summary>
+        public bool LoadAssemblyParts
+        {
+            get { return loadAssemblyParts; }
+            set { loadAssemblyParts = value;  }
         }
 
         /// <summary>
@@ -58,18 +74,46 @@ namespace SilverlightActivator
         private static void RunActivationMethods<T>() where T : BaseActivationMethodAttribute
         {
             var deploymentParts = Deployment.Current.Parts.Cast<AssemblyPart>();
+
+            if (loadAssemblyParts && !assemblyPartsLoaded)
+            {
+                Load(deploymentParts);
+                assemblyPartsLoaded = true;
+            }
+
+            // Filter loaded assemblies to only get the deployment assembly parts.
             var activationAssemblies = AppDomain.CurrentDomain.GetAssemblies()
                 .Where(a => deploymentParts.Any(p => p.Source.Equals(a.ManifestModule.Name, StringComparison.OrdinalIgnoreCase))
-                            && (a != typeof(ActivationManager).Assembly));
+                            && (a != typeof(ActivationManager).Assembly))
+                .ToList();
+            var activationAttributes = new List<T>();
 
-            foreach (var assembly in activationAssemblies)
+            // Iterate throughout all the loaded deployment assembly parts to look for activation attributes.
+            activationAssemblies.ForEach(assembly => activationAttributes.AddRange(assembly.GetActivationAttributes<T>()));
+
+            // Execute activation methods according to the order specified.
+            foreach (var attribute in activationAttributes.OrderBy(at => at.Order))
             {
-                // The activation methods are executed according to the specified order
-                var activationAttributes = assembly.GetActivationAttributes<T>().OrderBy(at => at.Order);
-                foreach (var attribute in activationAttributes)
+                attribute.InvokeMethod();
+            }
+        }
+
+        private static void Load(IEnumerable<AssemblyPart> deploymentParts)
+        {
+            foreach (var assemblyPart in deploymentParts)
+            {
+                var assemblyString = assemblyPart.Source
+                    .ToUpperInvariant()
+                    .Replace(".DLL", string.Empty);
+
+                try
                 {
-                    attribute.InvokeMethod();
+                    if (!string.IsNullOrWhiteSpace(assemblyString))
+                        Assembly.Load(assemblyString);
                 }
+                catch (FileNotFoundException) { }
+                catch (FileLoadException) { }
+                catch (BadImageFormatException) { }
             }
         }
     }

@@ -19,4 +19,5 @@
 // You do not need to add suppressions to this file manually.
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1053:StaticHolderTypesShouldNotHaveConstructors", Scope = "type", Target = "SilverlightActivator.ActivationManager", Justification = "This class cannot be static and must contain one default public constructor since it is added as an application resource in the App.xaml file.")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "SilverlightActivator", Justification = "There is only one namespace in the assembly")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "SilverlightActivator", Justification = "There is only one namespace in the assembly.")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "SilverlightActivator.ActivationManager.#LoadAssemblyParts", Justification = "This property is intended to be set when added as an application resource in the App.xaml file.")]
