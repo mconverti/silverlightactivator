@@ -75,6 +75,8 @@ namespace SilverlightActivator
         {
             var deploymentParts = Deployment.Current.Parts.Cast<AssemblyPart>();
 
+            // Load all deployment assembly parts based on the LoadAssemblyParts flag
+            // in case they include activation attributes.
             if (loadAssemblyParts && !assemblyPartsLoaded)
             {
                 Load(deploymentParts);
